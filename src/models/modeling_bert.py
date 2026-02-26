@@ -5,10 +5,8 @@ import torch
 from torch import nn, Tensor, device
 
 from transformers.activations import ACT2FN
-from transformers.modeling_utils import (
-    PreTrainedModel,
-    apply_chunking_to_forward,
-)
+from transformers.modeling_utils import PreTrainedModel
+from transformers.pytorch_utils import apply_chunking_to_forward
 from transformers.configuration_utils import PretrainedConfig
 from transformers.modeling_outputs import BaseModelOutput, BaseModelOutputWithPooling
 class BertEmbeddings(nn.Module):

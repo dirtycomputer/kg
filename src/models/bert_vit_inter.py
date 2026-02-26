@@ -3,10 +3,8 @@ import math
 import torch.cuda
 from transformers.modeling_outputs import TokenClassifierOutput, BaseModelOutput, BaseModelOutputWithPooling
 from transformers.activations import ACT2FN
-from transformers.modeling_utils import (
-    PreTrainedModel,
-    apply_chunking_to_forward,
-)
+from transformers.modeling_utils import PreTrainedModel
+from transformers.pytorch_utils import apply_chunking_to_forward
 from torch import nn, Tensor, device
 import torch.nn.functional as F
 
