@@ -1,0 +1,35 @@
+# Reference repos (read-only)
+MMIB/
+REMOTE/
+
+# Data
+data/
+
+# OS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Checkpoints
+checkpoints/
+*.pth
+*.pt
+
+# Logs
+logs/
+*.log
+test.txt
+test_best_encoder.txt

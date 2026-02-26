@@ -1,0 +1,44 @@
+# Default configuration for Relevance-Aware Unified Multimodal RE
+
+# Model
+bert_name: "bert-base-uncased"
+vit_name: "openai/clip-vit-base-patch32"
+num_labels: null  # auto-detected from re_path
+max_seq: 128
+
+# Data
+dataset_name: "UMKE"
+data_dir: "./data"
+img_dir: null
+dep_dir: null
+cap_path: null
+re_path: null
+
+# Training
+num_epochs: 30
+batch_size: 16
+lr: 2e-5
+warmup_ratio: 0.01
+eval_begin_epoch: 16
+seed: 1
+device: "cuda"
+
+# Feature switches
+use_box: true
+use_cap: true
+use_dep: true
+
+# New module switches
+use_gate: true
+use_vib: true
+use_seq_vib: true
+use_entity_vib: true
+
+# Hyperparameters
+beta_seq: 0.01
+alpha_gate: 0.5
+lambda_entropy: 0.1
+
+# Evaluation
+do_robust_eval: false
+do_calibrate: false
