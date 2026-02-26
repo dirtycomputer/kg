@@ -95,8 +95,11 @@ class UMKEDataset(Dataset):
         self.tokenizer = self.processor.tokenizer
         self.clip_processor = self.processor.clip_processor
         self.ent_processor = self.processor.ent_processor
-        self.ent_processor.feature_extractor.size, self.ent_processor.feature_extractor.crop_size = 64, 64
-        self.crop_size = self.ent_processor.feature_extractor.crop_size
+        # 兼容新版 transformers: feature_extractor → image_processor
+        _img_proc = self.ent_processor.image_processor
+        _img_proc.size = {'shortest_edge': 64}
+        _img_proc.crop_size = {'height': 64, 'width': 64}
+        self.crop_size = 64
 
     def __len__(self):
         return len(self.data_dict['words'])

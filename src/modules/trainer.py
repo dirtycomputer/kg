@@ -78,8 +78,9 @@ class Trainer(object):
                 pbar.set_description_str(desc="Epoch {}/{}".format(epoch, self.args.num_epochs))
                 for batch in self.train_data:
                     self.step += 1
-                    batch = (tup.to(self.args.device) if isinstance(tup, torch.Tensor) else tup for tup in batch)
                     params, labels = batch
+                    params = {k: v.to(self.args.device) if isinstance(v, torch.Tensor) else v for k, v in params.items()}
+                    labels = labels.to(self.args.device)
 
                     # Forward
                     result = self._step(params, labels, mode='train')
@@ -136,8 +137,9 @@ class Trainer(object):
                 pbar.set_description_str(desc="Evaluating")
                 total_loss = 0
                 for batch in self.dev_data:
-                    batch = (tup.to(self.args.device) if isinstance(tup, torch.Tensor) else tup for tup in batch)
                     params, labels = batch
+                    params = {k: v.to(self.args.device) if isinstance(v, torch.Tensor) else v for k, v in params.items()}
+                    labels = labels.to(self.args.device)
                     loss, logits, _ = self._step(params, labels, mode='eval')
                     total_loss += loss.detach().cpu().item()
 
@@ -189,8 +191,9 @@ class Trainer(object):
                 pbar.set_description_str(desc="Testing")
                 total_loss = 0
                 for batch in self.test_data:
-                    batch = (tup.to(self.args.device) if isinstance(tup, torch.Tensor) else tup for tup in batch)
                     params, labels = batch
+                    params = {k: v.to(self.args.device) if isinstance(v, torch.Tensor) else v for k, v in params.items()}
+                    labels = labels.to(self.args.device)
                     loss, logits, _ = self._step(params, labels, mode='eval')
                     total_loss += loss.detach().cpu().item()
 
