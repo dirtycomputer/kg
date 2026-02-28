@@ -52,25 +52,27 @@ def eval_result(true_labels, pred_result, rel2id, logger, use_name=False):
 
 def compute_ece(logits, labels, n_bins=15):
     """Expected Calibration Error"""
-    probs = F.softmax(logits, dim=1)
+    probs = F.softmax(logits.detach(), dim=1)
     confidences, predictions = probs.max(dim=1)
     accuracies = predictions.eq(labels)
 
     ece = 0.0
+    conf_np = confidences.cpu().numpy()
+    acc_np = accuracies.cpu().numpy().astype(float)
     bin_boundaries = np.linspace(0, 1, n_bins + 1)
     for i in range(n_bins):
-        in_bin = (confidences.cpu().numpy() > bin_boundaries[i]) & (confidences.cpu().numpy() <= bin_boundaries[i + 1])
+        in_bin = (conf_np > bin_boundaries[i]) & (conf_np <= bin_boundaries[i + 1])
         prop_in_bin = in_bin.mean()
         if prop_in_bin > 0:
-            avg_confidence = confidences.cpu().numpy()[in_bin].mean()
-            avg_accuracy = accuracies.cpu().numpy()[in_bin].astype(float).mean()
+            avg_confidence = conf_np[in_bin].mean()
+            avg_accuracy = acc_np[in_bin].mean()
             ece += abs(avg_confidence - avg_accuracy) * prop_in_bin
     return float(ece)
 
 
 def compute_brier(logits, labels):
     """Brier Score"""
-    probs = F.softmax(logits, dim=1)
+    probs = F.softmax(logits.detach(), dim=1)
     num_classes = probs.shape[1]
     one_hot = F.one_hot(labels, num_classes).float()
     brier = ((probs - one_hot) ** 2).sum(dim=1).mean()
@@ -79,7 +81,7 @@ def compute_brier(logits, labels):
 
 def compute_nll(logits, labels):
     """Negative Log-Likelihood"""
-    return F.cross_entropy(logits, labels).item()
+    return F.cross_entropy(logits.detach(), labels).item()
 
 
 def compute_calibration_metrics(logits, labels, n_bins=15):

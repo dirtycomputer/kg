@@ -67,8 +67,9 @@ def _evaluate_single(model, dataloader, re_dict, args, perturb_fn=None):
 
     with torch.no_grad():
         for batch in tqdm(dataloader, desc="Evaluating", leave=False):
-            batch = (tup.to(args.device) if isinstance(tup, torch.Tensor) else tup for tup in batch)
             params, labels = batch
+            params = {k: v.to(args.device) if isinstance(v, torch.Tensor) else v for k, v in params.items()}
+            labels = labels.to(args.device)
 
             # 应用扰动
             if perturb_fn is not None:

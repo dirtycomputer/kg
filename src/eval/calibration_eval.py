@@ -24,8 +24,9 @@ def calibration_evaluate(model, dataloader, args, temperature=None):
 
     with torch.no_grad():
         for batch in tqdm(dataloader, desc="Collecting logits", leave=False):
-            batch = (tup.to(args.device) if isinstance(tup, torch.Tensor) else tup for tup in batch)
             params, labels = batch
+            params = {k: v.to(args.device) if isinstance(v, torch.Tensor) else v for k, v in params.items()}
+            labels = labels.to(args.device)
             params['mode'] = 'eval'
             outputs = model(**params)
             if isinstance(outputs, tuple):
@@ -74,8 +75,9 @@ def fit_temperature(model, val_dataloader, args):
 
     with torch.no_grad():
         for batch in tqdm(val_dataloader, desc="Collecting val logits", leave=False):
-            batch = (tup.to(args.device) if isinstance(tup, torch.Tensor) else tup for tup in batch)
             params, labels = batch
+            params = {k: v.to(args.device) if isinstance(v, torch.Tensor) else v for k, v in params.items()}
+            labels = labels.to(args.device)
             params['mode'] = 'eval'
             outputs = model(**params)
             if isinstance(outputs, tuple):
